@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ajaykannan M — Medical Billing Specialist</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f1117;
+    --paper: #f5f0e8;
+    --cream: #ede8dc;
+    --gold: #c9a84c;
+    --gold-light: #e8d08a;
+    --rust: #b5451b;
+    --teal: #1a6b6e;
+    --teal-light: #d4ecee;
+    --muted: #7a7060;
+    --border: #d4ccb8;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom Cursor */
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease;
+    mix-blend-mode: multiply;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--gold);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.35s cubic-bezier(.25,.46,.45,.94), opacity 0.3s;
+    mix-blend-mode: multiply;
+  }
+
+  /* Noise Overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* ── HEADER ── */
+  header {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-left {
+    background: var(--ink);
+    padding: 60px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-left::after {
+    content: 'RCM';
+    position: absolute;
+    bottom: -20px; right: -10px;
+    font-family: 'Playfair Display', serif;
+    font-size: 180px;
+    font-weight: 900;
+    color: rgba(255,255,255,0.03);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .logo-mark {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.1s forwards;
+  }
+
+  .header-name-block {
+    opacity: 0;
+    animation: fadeUp 0.7s 0.3s forwards;
+  }
+
+  .header-name-block h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 6vw, 72px);
+    font-weight: 900;
+    color: var(--paper);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  .header-name-block h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .header-name-block .title-tag {
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .title-tag::before {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .header-contact {
+    opacity: 0;
+    animation: fadeUp 0.7s 0.5s forwards;
+  }
+
+  .header-contact a {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: rgba(245,240,232,0.5);
+    text-decoration: none;
+    margin-bottom: 6px;
+    transition: color 0.2s;
+    letter-spacing: 0.05em;
+  }
+
+  .header-contact a:hover { color: var(--gold); }
+
+  .header-right {
+    background: var(--teal);
+    padding: 60px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-right::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 50%;
+  }
+  .header-right::after {
+    content: '';
+    position: absolute;
+    bottom: -100px; left: -80px;
+    width: 400px; height: 400px;
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 50%;
+  }
+
+  .summary-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.4s forwards;
+  }
+
+  .summary-text {
+    font-size: 17px;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.85);
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.55s forwards;
+  }
+
+  .summary-text strong {
+    color: #fff;
+    font-weight: 500;
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 30px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.7s forwards;
+  }
+
+  .stat {
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding-top: 14px;
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--gold-light);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-top: 5px;
+  }
+
+  /* ── NAV STRIP ── */
+  nav {
+    background: var(--ink);
+    display: flex;
+    gap: 0;
+    overflow: hidden;
+  }
+
+  nav a {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: rgba(255,255,255,0.35);
+    text-decoration: none;
+    padding: 14px 28px;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    transition: color 0.2s, background 0.2s;
+    position: relative;
+  }
+
+  nav a:hover {
+    color: var(--gold);
+    background: rgba(255,255,255,0.03);
+  }
+
+  /* ── SECTION BASICS ── */
+  section {
+    padding: 90px 60px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 4vw, 50px);
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 50px;
+  }
+
+  /* ── EXPERIENCE ── */
+  #experience { background: var(--cream); max-width: 100%; padding: 90px 0; }
+  #experience .inner { max-width: 1100px; margin: 0 auto; padding: 0 60px; }
+
+  .exp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .exp-card {
+    background: var(--paper);
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+
+  .exp-card:hover { background: #fff; }
+
+  .exp-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--teal);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.4s cubic-bezier(.25,.46,.45,.94);
+  }
+
+  .exp-card:hover::before { transform: scaleY(1); }
+
+  .exp-period {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+
+  .exp-company {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 5px;
+  }
+
+  .exp-role {
+    font-size: 13px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 500;
+    margin-bottom: 18px;
+  }
+
+  .exp-badge {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    color: var(--teal);
+    background: var(--teal-light);
+  }
+
+  .exp-current .exp-badge {
+    background: var(--teal);
+    color: #fff;
+    border-color: var(--teal);
+  }
+
+  /* ── SKILLS ── */
+  .skills-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+  }
+
+  .skill-group-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .skill-group-title::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0;
+    width: 40px; height: 2px;
+    background: var(--gold);
+  }
+
+  .skill-tag {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    padding: 6px 14px;
+    margin: 4px;
+    border: 1px solid var(--border);
+    color: var(--ink);
+    background: var(--cream);
+    transition: all 0.25s;
+    cursor: default;
+  }
+
+  .skill-tag:hover {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+    transform: translateY(-2px);
+  }
+
+  .skill-tag.highlight {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  /* ── STRENGTHS ── */
+  #strengths { background: var(--ink); max-width: 100%; padding: 90px 0; }
+  #strengths .inner { max-width: 1100px; margin: 0 auto; padding: 0 60px; }
+  #strengths .section-title { color: var(--paper); }
+  #strengths .section-label { color: var(--gold); }
+
+  .strengths-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.07);
+  }
+
+  .strength-item {
+    background: var(--ink);
+    padding: 32px 28px;
+    border-top: 2px solid transparent;
+    transition: border-color 0.3s, background 0.3s;
+  }
+
+  .strength-item:hover {
+    border-color: var(--gold);
+    background: rgba(255,255,255,0.03);
+  }
+
+  .strength-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+    font-weight: 400;
+  }
+
+  .strength-text {
+    font-size: 14px;
+    color: rgba(255,255,255,0.72);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* ── EDUCATION ── */
+  .edu-timeline {
+    position: relative;
+    padding-left: 30px;
+  }
+
+  .edu-timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px; bottom: 8px;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .edu-item {
+    position: relative;
+    padding: 0 0 44px 36px;
+  }
+
+  .edu-item::before {
+    content: '';
+    position: absolute;
+    left: -5px; top: 7px;
+    width: 10px; height: 10px;
+    background: var(--paper);
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+  }
+
+  .edu-year {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+
+  .edu-degree {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .edu-school {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .edu-score {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    padding: 3px 10px;
+    background: var(--teal-light);
+    color: var(--teal);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── PORTALS SECTION ── */
+  #portals { background: var(--cream); max-width: 100%; padding: 90px 0; }
+  #portals .inner { max-width: 1100px; margin: 0 auto; padding: 0 60px; }
+
+  .portals-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .portal-card {
+    background: var(--paper);
+    padding: 28px 20px;
+    text-align: center;
+    transition: background 0.2s, transform 0.2s;
+    cursor: default;
+  }
+
+  .portal-card:hover {
+    background: var(--teal);
+  }
+
+  .portal-card:hover .portal-name {
+    color: #fff;
+  }
+
+  .portal-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  .portal-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink);
+    transition: color 0.2s;
+  }
+
+  /* ── PERSONAL ── */
+  .personal-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .personal-item {
+    background: var(--paper);
+    padding: 30px;
+  }
+
+  .personal-key {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .personal-val {
+    font-size: 15px;
+    color: var(--ink);
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    padding: 40px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--paper);
+    font-weight: 700;
+  }
+
+  .footer-note {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.65s ease, transform 0.65s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    header { grid-template-columns: 1fr; }
+    .header-left, .header-right { padding: 40px 28px; }
+    section { padding: 60px 28px; }
+    .exp-grid, .skills-layout, .strengths-grid, .portals-grid, .personal-grid {
+      grid-template-columns: 1fr;
+    }
+    #experience .inner, #strengths .inner, #portals .inner { padding: 0 28px; }
+    nav { flex-wrap: wrap; }
+    footer { flex-direction: column; gap: 10px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-left">
+    <div class="logo-mark">Portfolio — 2025</div>
+    <div class="header-name-block">
+      <h1>Ajay<br><em>kannan</em> M</h1>
+      <div class="title-tag">Medical Billing Specialist</div>
+    </div>
+    <div class="header-contact">
+      <a href="mailto:ajaykannan.2899@gmail.com">ajaykannan.2899@gmail.com</a>
+      <a href="tel:8220157938">+91 82201 57938</a>
+      <a>Chennai, Tamil Nadu</a>
+    </div>
+  </div>
+  <div class="header-right">
+    <div>
+      <div class="summary-label">Career Summary</div>
+      <p class="summary-text">
+        A dedicated <strong>RCM Medical Billing</strong> professional with <strong>2 years of hands-on experience</strong> in Revenue Cycle Management. Specialising in <strong>Denial Management</strong> — analysing claim rejections, identifying root causes, and delivering well-researched resolutions that keep revenue flowing.
+      </p>
+    </div>
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-num">2+</div>
+        <div class="stat-label">Years Experience</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Software Platforms</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">5+</div>
+        <div class="stat-label">Portals Mastered</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav>
+  <a href="#experience">Experience</a>
+  <a href="#skills">Skills</a>
+  <a href="#strengths">Strengths</a>
+  <a href="#education">Education</a>
+  <a href="#portals">Portals</a>
+  <a href="#personal">Personal</a>
+</nav>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="inner">
+    <div class="reveal">
+      <div class="section-label">Work History</div>
+      <h2 class="section-title">Professional<br>Experience</h2>
+    </div>
+    <div class="exp-grid reveal">
+      <div class="exp-card exp-current">
+        <div class="exp-period">April 2025 — Present</div>
+        <div class="exp-company">Access Healthcare</div>
+        <div class="exp-role">Process Executive – AR</div>
+        <span class="exp-badge">Current Role</span>
+      </div>
+      <div class="exp-card">
+        <div class="exp-period">March 2024 — March 2025</div>
+        <div class="exp-company">Omega Healthcare</div>
+        <div class="exp-role">Process Executive – AR</div>
+        <span class="exp-badge">1 Year</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="reveal">
+    <div class="section-label">Technical Proficiency</div>
+    <h2 class="section-title">Skills &<br>Software</h2>
+  </div>
+  <div class="skills-layout reveal">
+    <div>
+      <div class="skill-group-title">Client Software</div>
+      <div>
+        <span class="skill-tag highlight">GFS</span>
+        <span class="skill-tag highlight">ECW</span>
+        <span class="skill-tag highlight">Allscripts</span>
+      </div>
+      <br>
+      <div class="skill-group-title" style="margin-top:30px;">Core Competencies</div>
+      <div>
+        <span class="skill-tag">Medical Billing</span>
+        <span class="skill-tag">Denial Management</span>
+        <span class="skill-tag">AR Follow-up</span>
+        <span class="skill-tag">Medical Terminology</span>
+        <span class="skill-tag">Revenue Cycle</span>
+        <span class="skill-tag">Claims Analysis</span>
+      </div>
+    </div>
+    <div>
+      <div class="skill-group-title">Insurance Portals</div>
+      <div>
+        <span class="skill-tag">Availity</span>
+        <span class="skill-tag">NPI Registry</span>
+        <span class="skill-tag">Epaces</span>
+        <span class="skill-tag">UHC Portal</span>
+        <span class="skill-tag">NGS Portal</span>
+        <span class="skill-tag">Navinet</span>
+      </div>
+      <br>
+      <div class="skill-group-title" style="margin-top:30px;">Professional Skills</div>
+      <div>
+        <span class="skill-tag">Team Leadership</span>
+        <span class="skill-tag">Process Improvement</span>
+        <span class="skill-tag">Quality Management</span>
+        <span class="skill-tag">Communication</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STRENGTHS -->
+<section id="strengths">
+  <div class="inner">
+    <div class="reveal">
+      <div class="section-label">Core Strengths</div>
+      <h2 class="section-title">What I<br>Bring</h2>
+    </div>
+    <div class="strengths-grid reveal">
+      <div class="strength-item">
+        <div class="strength-num">01</div>
+        <div class="strength-text">Proficient in Medical Billing and Medical Terminology with deep domain knowledge.</div>
+      </div>
+      <div class="strength-item">
+        <div class="strength-num">02</div>
+        <div class="strength-text">Strong ability to multitask, organised, disciplined and meticulously detail-oriented.</div>
+      </div>
+      <div class="strength-item">
+        <div class="strength-num">03</div>
+        <div class="strength-text">Effective communicator with strong team management, leadership and coordination abilities.</div>
+      </div>
+      <div class="strength-item">
+        <div class="strength-num">04</div>
+        <div class="strength-text">Experienced in managing, motivating and leading teams towards successful BPO operations.</div>
+      </div>
+      <div class="strength-item">
+        <div class="strength-num">05</div>
+        <div class="strength-text">Analytical mindset — able to quickly analyse situations, identify requirements and provide solutions.</div>
+      </div>
+      <div class="strength-item">
+        <div class="strength-num">06</div>
+        <div class="strength-text">Proactive in driving process improvements and providing constructive feedback to team members.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="reveal">
+    <div class="section-label">Academic Background</div>
+    <h2 class="section-title">Education</h2>
+  </div>
+  <div class="edu-timeline reveal">
+    <div class="edu-item">
+      <div class="edu-year">2022</div>
+      <div class="edu-degree">B.E. in Electronics &amp; Communication</div>
+      <div class="edu-school">Government College of Engineering, Tirunelveli</div>
+      <span class="edu-score">75%</span>
+    </div>
+    <div class="edu-item">
+      <div class="edu-year">2018</div>
+      <div class="edu-degree">Diploma in ECE</div>
+      <div class="edu-school">MSPVL Polytechnic College</div>
+      <span class="edu-score">94%</span>
+    </div>
+    <div class="edu-item">
+      <div class="edu-year">2015</div>
+      <div class="edu-degree">SSLC</div>
+      <div class="edu-school">ST Hr. Sec. School</div>
+      <span class="edu-score">85%</span>
+    </div>
+  </div>
+</section>
+
+<!-- PORTALS -->
+<section id="portals">
+  <div class="inner">
+    <div class="reveal">
+      <div class="section-label">Insurance &amp; Verification</div>
+      <h2 class="section-title">Portals &<br>Platforms</h2>
+    </div>
+    <div class="portals-grid reveal">
+      <div class="portal-card">
+        <div class="portal-icon">🏥</div>
+        <div class="portal-name">Availity</div>
+      </div>
+      <div class="portal-card">
+        <div class="portal-icon">🔍</div>
+        <div class="portal-name">NPI Registry</div>
+      </div>
+      <div class="portal-card">
+        <div class="portal-icon">📋</div>
+        <div class="portal-name">Epaces</div>
+      </div>
+      <div class="portal-card">
+        <div class="portal-icon">🛡️</div>
+        <div class="portal-name">UHC &amp; NGS</div>
+      </div>
+      <div class="portal-card">
+        <div class="portal-icon">🌐</div>
+        <div class="portal-name">Navinet</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PERSONAL -->
+<section id="personal">
+  <div class="reveal">
+    <div class="section-label">About Me</div>
+    <h2 class="section-title">Personal<br>Details</h2>
+  </div>
+  <div class="personal-grid reveal">
+    <div class="personal-item">
+      <div class="personal-key">Date of Birth</div>
+      <div class="personal-val">28 July 1999</div>
+    </div>
+    <div class="personal-item">
+      <div class="personal-key">Location</div>
+      <div class="personal-val">Nanganallur, Chennai — 600061</div>
+    </div>
+    <div class="personal-item">
+      <div class="personal-key">Languages</div>
+      <div class="personal-val">Tamil &amp; English</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-name">Ajaykannan M</div>
+  <div class="footer-note">Medical Billing Specialist — Chennai, India</div>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.transform = `translate(${mx - 5}px, ${my - 5}px)`;
+  });
+
+  function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.transform = `translate(${rx - 18}px, ${ry - 18}px)`;
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.querySelectorAll('a, button, .skill-tag, .portal-card, .exp-card, .strength-item').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.transform += ' scale(2)'; ring.style.opacity = '0.4'; });
+    el.addEventListener('mouseleave', () => { ring.style.opacity = '1'; });
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  reveals.forEach(el => io.observe(el));
+</script>
+</body>
+</html>
